@@ -1,71 +1,45 @@
 "use client";
 
+import * as LucideIcons from "lucide-react";
+
 import { Carousel, CarouselContent, CarouselItem } from "./ui/carousel";
 
 import { AnimatedSection } from "./ui/animated-section";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { projects } from "@/data/projects";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 
 export default function ProjectsSection() {
 	const { elementRef, isIntersecting } = useIntersectionObserver();
 
-	const projects = [
-		{
-			title: "Aora",
-			category: "Development",
-			year: "2024",
-			bgColor: "bg-yellow-100 dark:bg-yellow-900/20",
-			delay: 2000,
-			orientation: "horizontal",
-			image:
-				"https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=600",
-			padding: "p-4",
-		},
-		{
-			title: "Code Screenshot",
-			category: "Development & Design",
-			year: "2024",
-			bgColor: "bg-pink-100 dark:bg-pink-900/20",
-			delay: 2500,
-			orientation: "vertical",
-			image:
-				"https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
-		},
-		{
-			title: "Commerce App",
-			category: "UI/UX Design",
-			year: "2023",
-			bgColor: "bg-green-100 dark:bg-gray-800",
-			delay: 3000,
-			orientation: "horizontal",
-			image:
-				"https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=600",
-		},
-		// {
-		// 	title: "Analytics Platform",
-		// 	category: "Full Stack Development",
-		// 	year: "2023",
-		// 	bgColor: "bg-blue-100 dark:bg-blue-900/20",
-		// 	delay: 2200,
-		// 	orientation: "vertical",
-		// 	image:
-		// 		"https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
-		// },
-	];
+	// Get first 3 projects
+	const selectedProjects = projects.slice(0, 3);
+
+	// Function to get Lucide icon component
+	const getIcon = (iconName: string) => {
+		const Icon = (LucideIcons as any)[iconName];
+		return Icon ? <Icon className="w-6 h-6" /> : null;
+	};
 
 	const CItem = (project: any) => {
 		return (
 			<div className="group cursor-pointer h-full">
 				<div
-					className={`${project.bgColor} ${project.padding} rounded-2xl overflow-hidden relative hover:scale-105 transition-transform duration-300  h-full`}
+					className={`bg-muted/50 backdrop-blur-sm rounded-2xl overflow-hidden relative hover:scale-105 transition-transform duration-300 h-full`}
 				>
 					<img
-						src={project.image}
-						alt={`${project.title} project showcase`}
+						src={project.screenshots[0].src}
+						alt={project.screenshots[0].alt}
 						className="mx-auto h-full w-full object-cover rounded-xl shadow-lg hover:scale-150 transition-transform duration-300"
 					/>
+					<div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
+					<div className="absolute bottom-4 left-4 right-4">
+						<p className="text-white text-sm font-medium">
+							{project.screenshots[0].caption}
+						</p>
+					</div>
 				</div>
 			</div>
 		);
@@ -110,10 +84,10 @@ export default function ProjectsSection() {
 				</div>
 
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-					{projects.map((project, index) => (
-						<div key={index} className="group ">
+					{selectedProjects.map((project, index) => (
+						<div key={project.id} className="group">
 							<Carousel
-								orientation={project.orientation as "horizontal" | "vertical"}
+								orientation={index === 1 ? "vertical" : "horizontal"}
 								opts={{
 									align: "center",
 									loop: true,
@@ -121,45 +95,36 @@ export default function ProjectsSection() {
 								}}
 								plugins={[
 									Autoplay({
-										delay: project.delay,
+										delay: 2000 + index * 500,
 									}),
 								]}
 							>
 								<CarouselContent
-									className={
-										project.orientation === "vertical"
-											? "flex-col h-[420px]"
-											: "-ml-3"
-									}
+									className={index === 1 ? "flex-col h-[420px]" : "-ml-3"}
 								>
-									<CarouselItem
-										className={`basis-full h-[400px] ${project.orientation === "vertical" ? "" : "pl-3"}`}
-									>
-										<CItem {...projects[0]} />
-									</CarouselItem>
-									<CarouselItem
-										className={`basis-full h-[400px] ${project.orientation === "vertical" ? "" : "pl-3"}`}
-									>
-										<CItem {...projects[1]} />
-									</CarouselItem>
-									<CarouselItem
-										className={`basis-full h-[400px] ${project.orientation === "vertical" ? "" : "pl-3"}`}
-									>
-										<CItem {...projects[2]} />
-									</CarouselItem>
+									{project.screenshots.map((screenshot, idx) => (
+										<CarouselItem
+											key={idx}
+											className={`basis-full h-[400px] ${
+												index === 1 ? "" : "pl-3"
+											}`}
+										>
+											<CItem {...project} />
+										</CarouselItem>
+									))}
 								</CarouselContent>
 							</Carousel>
 							<div className="flex justify-between items-end mt-4">
 								<div>
 									<h3 className="text-xl font-medium font-clash mb-1">
-										{projects[0].title}
+										{project.title}
 									</h3>
 									<p className="text-muted-foreground">
-										{projects[0].category}
+										{project.categories[0]}
 									</p>
 								</div>
 								<span className="text-muted-foreground">
-									{projects[0].year}
+									{new Date(project.start_date).getFullYear()}
 								</span>
 							</div>
 						</div>

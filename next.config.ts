@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
 		ignoreDuringBuilds: true,
 	},
 	images: {
-        unoptimized: true,
+		unoptimized: true,
 		remotePatterns: [
 			{
 				protocol: "https",
@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
 		],
 	},
 	devIndicators: false,
-    // output : "export"
+	// output : "export"
 };
 
 export default nextConfig;
