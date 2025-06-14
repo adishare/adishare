@@ -80,15 +80,15 @@ export const metadata: Metadata = {
 	applicationName: "adishare Portfolio",
 	generator: "Next.js",
 	referrer: "origin-when-cross-origin",
-	themeColor: [
-		{ media: "(prefers-color-scheme: light)", color: "white" },
-		{ media: "(prefers-color-scheme: dark)", color: "black" },
-	],
-	viewport: {
-		width: "device-width",
-		initialScale: 1,
-		maximumScale: 1,
-	},
+	// themeColor: [
+	// 	{ media: "(prefers-color-scheme: light)", color: "white" },
+	// 	{ media: "(prefers-color-scheme: dark)", color: "black" },
+	// ],
+	// viewport: {
+	// 	width: "device-width",
+	// 	initialScale: 1,
+	// 	maximumScale: 1,
+	// },
 	icons: {
 		icon: "/favicon.ico",
 		shortcut: "/favicon.png",
